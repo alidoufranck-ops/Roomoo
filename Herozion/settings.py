@@ -27,15 +27,18 @@ load_dotenv(BASE_DIR / '.env')  # 2. Chargez le fichier .env
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-SECRET_KEY =    os.getenv('SECRET_KEY')  # 3. Récupérez la clé secrète depuis le
-DEBUG = os.environ.get('DEBUG') == 'True'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-# Convertit la chaîne du .env en liste Python
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+ALLOWED_HOSTS = [
+    'roomoo-u70h.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.ngrok-free.app', # c'est pour securiser les requêtes CSRF venant de ngrok
-    'https://*.ngrok-free.dev', # c'est pour securiser les requêtes CSRF venant de ngrok
+    'https://roomoo-u70h.onrender.com',
 ]
 
 
