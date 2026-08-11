@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accueil — Les Quêtes de l'Île</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1B0E3D;
+  --dusk:#4A1A8C;
+  --violet:#7B2FF7;
+  --ocean:#0EA5A0;
+  --lagoon:#1FE0C6;
+  --sunset:#FF4D9D;
+  --coral:#FF6B4A;
+  --flame:#FF8A3D;
+  --gold:#FFC857;
+  --sand:#FFF6E9;
+  --sand-dark:#FFE7C2;
+  --ocean-deep:#1B0E3D;
+  --ocean-mid:#7B2FF7;
+}
+
+body{ font-family:'Poppins', sans-serif; background:var(--sand); }
+.font-display{ font-family:'Baloo 2', cursive; }
+
+.bg-sunset-ocean{
+  background: linear-gradient(160deg, var(--night) 0%, var(--dusk) 28%, var(--violet) 50%, var(--ocean) 75%, var(--lagoon) 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 14s ease infinite;
+}
+@keyframes gradientShift{
+  0%{ background-position: 0% 0%; }
+  50%{ background-position: 100% 100%; }
+  100%{ background-position: 0% 0%; }
+}
+
+.text-gradient{
+  background: linear-gradient(90deg, var(--gold), var(--sunset), var(--lagoon));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-glow{
+  background: linear-gradient(135deg, var(--coral), var(--sunset));
+  box-shadow: 0 8px 24px -6px rgba(255,77,157,.55);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.btn-glow:hover{
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 30px -6px rgba(255,138,61,.65);
+  filter: brightness(1.06);
+}
+
+.btn-outline-glow{
+  transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+}
+.btn-outline-glow:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -8px rgba(123,47,247,.45);
+}
+
+.wave-layer{ position:absolute; left:0; width:200%; }
+
+@keyframes drift{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+.drift-slow{ animation: drift 22s linear infinite; }
+.drift-mid{ animation: drift 14s linear infinite; }
+.drift-fast{ animation: drift 9s linear infinite; }
+
+@keyframes bob{ 0%,100%{ transform:translateY(0) rotate(-3deg);} 50%{ transform:translateY(-12px) rotate(3deg);} }
+.bob{ animation: bob 4s ease-in-out infinite; }
+
+@keyframes twinkle{ 0%,100%{ opacity:.2; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+.twinkle{ animation: twinkle 3s ease-in-out infinite; }
+
+@keyframes floatY{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-14px);} }
+.float-y{ animation: floatY 5s ease-in-out infinite; }
+
+.stitch{
+  background-image: repeating-linear-gradient(90deg, var(--violet) 0 10px, transparent 10px 20px);
+  height:2px;
+}
+
+.gradient-card{
+  position:relative;
+  border-radius: 1.75rem;
+  background: white;
+  isolation: isolate;
+}
+.gradient-card::before{
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius: inherit;
+  padding:2px;
+  background: linear-gradient(135deg, var(--sunset), var(--gold), var(--lagoon));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index:-1;
+  opacity:.85;
+}
+
+.quest-card{ transition: transform .25s ease, box-shadow .25s ease; }
+.quest-card:hover{ transform: translateY(-4px) rotate(-0.5deg); box-shadow: 0 20px 35px -12px rgba(74,26,140,.35); }
+
+::selection{ background: var(--sunset); color:white; }
+
+.shell-input:focus{ outline:none; box-shadow:0 0 0 3px rgba(255,77,157,.35); }
+
+.nav-active{ background: rgba(255,255,255,.2); }
+</style>
+</head>
+<body class="text-[var(--night)]">
+
+<nav class="fixed top-0 inset-x-0 z-50 bg-[var(--night)]/70 backdrop-blur-md text-[var(--sand)] border-b border-white/10">
+  <div class="max-w-5xl mx-auto flex items-center justify-between px-5 py-3">
+    <a href="" class="font-display text-xl md:text-2xl tracking-wide flex items-center gap-2">
+      <span class="text-2xl">🌺</span> <span class="text-gradient">Vaiana des Tâches</span>
+    </a>
+    <div class="flex gap-1 md:gap-2 text-sm md:text-base font-display">
+      <a href="" data-nav="home" class="nav-btn px-3 py-2 rounded-full hover:bg-white/10 transition nav-active">Accueil</a>
+      <a href="{% url 'formulaire'%}" data-nav="form" class="nav-btn px-3 py-2 rounded-full hover:bg-white/10 transition">Nouvelle quête</a>
+      <a href="{% url 'confirmation'%}" data-nav="list" class="nav-btn px-3 py-2 rounded-full hover:bg-white/10 transition">Mes quêtes</a>
+    </div>
+  </div>
+</nav>
+
+<div class="relative overflow-hidden min-h-screen pt-28 pb-16 flex flex-col items-center justify-center text-center bg-sunset-ocean">
+
+  <div class="absolute top-16 left-[10%] text-[var(--gold)] twinkle text-2xl">✦</div>
+  <div class="absolute top-24 left-[78%] text-[var(--lagoon)] twinkle text-lg" style="animation-delay:1s">✦</div>
+  <div class="absolute top-40 left-[45%] text-[var(--sunset)] twinkle text-sm" style="animation-delay:.5s">✦</div>
+  <div class="absolute top-52 left-[85%] text-[var(--gold)] twinkle text-2xl" style="animation-delay:1.5s">✦</div>
+  <div class="absolute top-14 left-[60%] text-[var(--sand)] twinkle text-xs" style="animation-delay:2s">✦</div>
+
+  <div class="absolute top-32 left-[6%] text-5xl float-y opacity-80" style="animation-delay:.3s">🌸</div>
+  <div class="absolute bottom-40 right-[8%] text-5xl float-y opacity-80" style="animation-delay:1.2s">🐚</div>
+  <div class="absolute top-1/2 left-[85%] text-4xl float-y opacity-70" style="animation-delay:.8s">🌺</div>
+
+  <div class="relative z-10 px-6 max-w-2xl">
+    <div class="text-7xl mb-4 bob">🌊</div>
+    <h1 class="font-display text-4xl md:text-6xl leading-tight">
+      <span class="text-gradient">L'océan t'appelle,</span><br>
+      <span class="text-[var(--sand)]">et tes tâches aussi</span>
+    </h1>
+    <p class="mt-5 text-[var(--sand)]/90 text-base md:text-lg font-light">
+      Organise tes quêtes du quotidien comme une véritable navigatrice.
+      Chaque tâche accomplie est une île de plus explorée sur ta carte.
+    </p>
+    <a href="{% url 'formulaire'%}"
+      class="btn-glow mt-8 inline-flex items-center gap-2 text-white font-display text-lg px-8 py-3.5 rounded-full">
+      ⛵ Tu veux quoi chouchou
+    </a>
+
+    <div class="mt-10 grid grid-cols-3 gap-4 text-[var(--sand)]">
+      <div class="bg-white/10 backdrop-blur border border-white/15 rounded-2xl py-4 px-2 hover:bg-white/20 transition">
+
+      </div>
+      <div class="bg-white/10 backdrop-blur border border-white/15 rounded-2xl py-4 px-2 hover:bg-white/20 transition">
+       
+      </div>
+      <div class="bg-white/10 backdrop-blur border border-white/15 rounded-2xl py-4 px-2 hover:bg-white/20 transition">
+       
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 left-0 w-full h-32 overflow-hidden">
+    <svg class="wave-layer drift-slow" style="bottom:0;" viewBox="0 0 1600 120" preserveAspectRatio="none" height="100%">
+      <path d="M0,60 C200,110 400,10 600,60 C800,110 1000,10 1200,60 C1400,110 1500,40 1600,60 L1600,120 L0,120 Z" fill="var(--gold)" opacity="0.2"/>
+    </svg>
+    <svg class="wave-layer drift-mid" style="bottom:0;" viewBox="0 0 1600 120" preserveAspectRatio="none" height="100%">
+      <path d="M0,70 C200,20 400,110 600,70 C800,30 1000,110 1200,70 C1400,30 1500,90 1600,70 L1600,120 L0,120 Z" fill="var(--sunset)" opacity="0.25"/>
+    </svg>
+    <svg class="wave-layer drift-fast" style="bottom:0;" viewBox="0 0 1600 120" preserveAspectRatio="none" height="100%">
+      <path d="M0,85 C200,50 400,110 600,85 C800,55 1000,110 1200,85 C1400,55 1500,100 1600,85 L1600,120 L0,120 Z" fill="var(--sand)" opacity="0.9"/>
+    </svg>
+  </div>
+</div>
+
+<script>
+// ----- Stockage (localStorage) -----
+const STORAGE_KEY = 'vaiana_quests';
+
+function seedIfEmpty(){
+  if(localStorage.getItem(STORAGE_KEY) === null){
+    const seed = [
+      {id:1, title:"Explorer la baie aux mille poissons", desc:"Repérer un nouveau lagon pour la pêche.", priority:"moyenne", date:"", done:false},
+      {id:2, title:"Réparer la voile du canoë", desc:"", priority:"haute", date:"", done:false},
+      {id:3, title:"Remercier l'océan", desc:"Petit rituel du matin.", priority:"basse", date:"", done:true},
+    ];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
+  }
+}
+
+function getQuests(){
+  seedIfEmpty();
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveQuests(quests){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(quests));
+}
+
+function addQuest(quest){
+  const quests = getQuests();
+  const nextId = quests.length ? Math.max(...quests.map(q=>q.id)) + 1 : 1;
+  quests.push({ id: nextId, done:false, ...quest });
+  saveQuests(quests);
+}
+
+function toggleQuest(id){
+  const quests = getQuests();
+  const q = quests.find(q=>q.id===id);
+  if(q) q.done = !q.done;
+  saveQuests(quests);
+}
+
+function removeQuest(id){
+  saveQuests(getQuests().filter(q=>q.id!==id));
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function highlightNav(current){
+  document.querySelectorAll('.nav-btn').forEach(el=>{
+    el.classList.toggle('nav-active', el.dataset.nav === current);
+  });
+}
+
+highlightNav('home');
+  const quests = getQuests();
+  const total = quests.length;
+  const done = quests.filter(q=>q.done).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-pct').textContent = pct + '%';
+</script>
+</body>
+</html>

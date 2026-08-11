@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nouvelle demande — Les Quêtes de l'Île</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1B0E3D;
+  --dusk:#4A1A8C;
+  --violet:#7B2FF7;
+  --ocean:#0EA5A0;
+  --lagoon:#1FE0C6;
+  --sunset:#FF4D9D;
+  --coral:#FF6B4A;
+  --flame:#FF8A3D;
+  --gold:#FFC857;
+  --sand:#FFF6E9;
+  --sand-dark:#FFE7C2;
+  --ocean-deep:#1B0E3D;
+  --ocean-mid:#7B2FF7;
+}
+
+body{ font-family:'Poppins', sans-serif; background:var(--sand); }
+.font-display{ font-family:'Baloo 2', cursive; }
+
+.bg-sunset-ocean{
+  background: linear-gradient(160deg, var(--night) 0%, var(--dusk) 28%, var(--violet) 50%, var(--ocean) 75%, var(--lagoon) 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 14s ease infinite;
+}
+@keyframes gradientShift{
+  0%{ background-position: 0% 0%; }
+  50%{ background-position: 100% 100%; }
+  100%{ background-position: 0% 0%; }
+}
+
+.text-gradient{
+  background: linear-gradient(90deg, var(--gold), var(--sunset), var(--lagoon));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-glow{
+  background: linear-gradient(135deg, var(--coral), var(--sunset));
+  box-shadow: 0 8px 24px -6px rgba(255,77,157,.55);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.btn-glow:hover{
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 30px -6px rgba(255,138,61,.65);
+  filter: brightness(1.06);
+}
+
+.wave-layer{ position:absolute; left:0; width:200%; }
+
+@keyframes drift{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+.drift-slow{ animation: drift 22s linear infinite; }
+.drift-mid{ animation: drift 14s linear infinite; }
+.drift-fast{ animation: drift 9s linear infinite; }
+
+@keyframes bob{ 0%,100%{ transform:translateY(0) rotate(-3deg);} 50%{ transform:translateY(-12px) rotate(3deg);} }
+.bob{ animation: bob 4s ease-in-out infinite; }
+
+@keyframes twinkle{ 0%,100%{ opacity:.2; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+.twinkle{ animation: twinkle 3s ease-in-out infinite; }
+
+@keyframes floatY{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-14px);} }
+.float-y{ animation: floatY 5s ease-in-out infinite; }
+
+.stitch{
+  background-image: repeating-linear-gradient(90deg, var(--violet) 0 10px, transparent 10px 20px);
+  height:2px;
+}
+
+.gradient-card{
+  position:relative;
+  border-radius: 1.75rem;
+  background: white;
+  isolation: isolate;
+}
+.gradient-card::before{
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius: inherit;
+  padding:2px;
+  background: linear-gradient(135deg, var(--sunset), var(--gold), var(--lagoon));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index:-1;
+  opacity:.85;
+}
+
+::selection{ background: var(--sunset); color:white; }
+
+.nav-active{ background: rgba(255,255,255,.2); }
+
+  .quest-form input[type="text"],
+  .quest-form textarea,
+  .quest-form select{
+    margin-top:.25rem;
+    width:100%;
+    border-radius:.9rem;
+    border:2px solid rgba(123,47,247,.15);
+    background:#FFF9F0;
+    padding:.8rem 1.1rem;
+    font-size:.9rem;
+    font-family:'Poppins', sans-serif;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .quest-form input[type="text"]:focus,
+  .quest-form textarea:focus,
+  .quest-form select:focus{
+    outline:none;
+    border-color: var(--sunset);
+    background: white;
+    box-shadow:0 0 0 4px rgba(255,77,157,.2);
+  }
+  .quest-form textarea{ resize:none; }
+</style>
+</head>
+<body class="text-[var(--night)]">
+
+<nav class="fixed top-0 inset-x-0 z-50 bg-[var(--night)]/70 backdrop-blur-md text-[var(--sand)] border-b border-white/10">
+  <div class="max-w-5xl mx-auto flex items-center justify-between px-5 py-3">
+    <a href="/" class="font-display text-xl md:text-2xl tracking-wide flex items-center gap-2">
+      <span class="text-2xl">🌺</span> <span class="text-gradient">Vaiana des Tâches</span>
+    </a>
+    <div class="flex gap-1 md:gap-2 text-sm md:text-base font-display">
+      <a href="/" class="px-3 py-2 rounded-full hover:bg-white/10 transition">Accueil</a>
+      <a href="{% url 'formulaire' %}" class="px-3 py-2 rounded-full bg-white/20">Nouvelle demande</a>
+      <a href="{% url 'confirmation' %}" class="px-3 py-2 rounded-full hover:bg-white/10 transition">Mes demandes</a>
+    </div>
+  </div>
+</nav>
+
+<div class="relative min-h-screen pt-28 pb-16 px-5 flex items-start justify-center overflow-hidden bg-sunset-ocean">
+
+  <div class="absolute top-24 left-[8%] text-4xl float-y opacity-70">🌸</div>
+  <div class="absolute bottom-24 right-[10%] text-4xl float-y opacity-70" style="animation-delay:1s">🐚</div>
+  <div class="absolute top-16 left-[70%] text-[var(--gold)] twinkle text-xl">✦</div>
+  <div class="absolute top-48 left-[15%] text-[var(--lagoon)] twinkle text-lg" style="animation-delay:.7s">✦</div>
+
+  <div class="relative z-10 w-full max-w-lg">
+    <div class="text-center mb-6">
+      <div class="text-6xl bob">🐚</div>
+      <h1 class="font-display text-3xl md:text-4xl mt-2 text-gradient">QU'EST CE QUI TE FERAIT PLAISIR ?</h1>
+      <p class="text-sm text-[var(--sand)]/85 mt-2">Confie ta demande à l'océan et laisse-la voguer jusqu'à nous.</p>
+    </div>
+
+    <form class="quest-form gradient-card p-6 md:p-8 shadow-2xl space-y-5" action="" method="post">
+      {% csrf_token %}
+
+      <div>
+        <label for="{{ forms.demandeur.id_for_label }}" class="font-display text-sm text-[var(--violet)]">👤 Demandeur</label>
+        {{ forms.demandeur }}
+        {% if forms.demandeur.errors %}
+          <p class="text-xs text-[var(--coral)] mt-1">{{ forms.demandeur.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ forms.demande.id_for_label }}" class="font-display text-sm text-[var(--violet)]">🌺 Demande</label>
+        {{ forms.demande }}
+        {% if forms.demande.errors %}
+          <p class="text-xs text-[var(--coral)] mt-1">{{ forms.demande.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ forms.details.id_for_label }}" class="font-display text-sm text-[var(--violet)]">📜 Détail</label>
+        {{ forms.details }}
+        {% if forms.details.errors %}
+          <p class="text-xs text-[var(--coral)] mt-1">{{ forms.details.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <button type="submit"
+        class="btn-glow w-full text-white font-display text-lg py-3.5 rounded-full flex items-center justify-center gap-2">
+        🌊 Demande
+      </button>
+    </form>
+
+    <div class="text-center mt-5">
+      <a href="/" class="text-sm text-[var(--sand)] underline decoration-[var(--gold)] underline-offset-4 hover:text-[var(--gold)] transition">retour</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

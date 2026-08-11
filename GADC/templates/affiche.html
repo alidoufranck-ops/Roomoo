@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes demandes — Les Quêtes de l'Île</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1B0E3D;
+  --dusk:#4A1A8C;
+  --violet:#7B2FF7;
+  --ocean:#0EA5A0;
+  --lagoon:#1FE0C6;
+  --sunset:#FF4D9D;
+  --coral:#FF6B4A;
+  --flame:#FF8A3D;
+  --gold:#FFC857;
+  --sand:#FFF6E9;
+  --sand-dark:#FFE7C2;
+  --ocean-deep:#1B0E3D;
+  --ocean-mid:#7B2FF7;
+}
+
+body{ font-family:'Poppins', sans-serif; background:var(--sand); }
+.font-display{ font-family:'Baloo 2', cursive; }
+
+.bg-sunset-ocean{
+  background: linear-gradient(160deg, var(--night) 0%, var(--dusk) 28%, var(--violet) 50%, var(--ocean) 75%, var(--lagoon) 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 14s ease infinite;
+}
+@keyframes gradientShift{
+  0%{ background-position: 0% 0%; }
+  50%{ background-position: 100% 100%; }
+  100%{ background-position: 0% 0%; }
+}
+
+.text-gradient{
+  background: linear-gradient(90deg, var(--gold), var(--sunset), var(--lagoon));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-glow{
+  background: linear-gradient(135deg, var(--coral), var(--sunset));
+  box-shadow: 0 8px 24px -6px rgba(255,77,157,.55);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.btn-glow:hover{
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 30px -6px rgba(255,138,61,.65);
+  filter: brightness(1.06);
+}
+
+@keyframes bob{ 0%,100%{ transform:translateY(0) rotate(-3deg);} 50%{ transform:translateY(-12px) rotate(3deg);} }
+.bob{ animation: bob 4s ease-in-out infinite; }
+
+@keyframes twinkle{ 0%,100%{ opacity:.2; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+.twinkle{ animation: twinkle 3s ease-in-out infinite; }
+
+@keyframes floatY{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-14px);} }
+.float-y{ animation: floatY 5s ease-in-out infinite; }
+
+.stitch{
+  background-image: repeating-linear-gradient(90deg, var(--violet) 0 10px, transparent 10px 20px);
+  height:2px;
+}
+
+.gradient-card{
+  position:relative;
+  border-radius: 1.75rem;
+  background: white;
+  isolation: isolate;
+}
+.gradient-card::before{
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius: inherit;
+  padding:2px;
+  background: linear-gradient(135deg, var(--sunset), var(--gold), var(--lagoon));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index:-1;
+  opacity:.85;
+}
+
+::selection{ background: var(--sunset); color:white; }
+
+.nav-active{ background: rgba(255,255,255,.2); }
+
+  .demand-card{
+    position:relative;
+    overflow:hidden;
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+  }
+  .demand-card::before{
+    content:"";
+    position:absolute; inset:0;
+    background: radial-gradient(circle at 90% -10%, rgba(255,77,157,.18), transparent 60%);
+    opacity:0;
+    transition: opacity .35s ease;
+    pointer-events:none;
+  }
+  .demand-card:hover{
+    transform: translateY(-8px) rotate(-0.4deg);
+    box-shadow: 0 25px 45px -14px rgba(27,14,61,.45);
+  }
+  .demand-card:hover::before{ opacity:1; }
+  .demand-card:hover .card-icon{ transform: scale(1.18) rotate(-10deg); }
+  .card-icon{
+    transition: transform .35s ease;
+    width:52px; height:52px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:9999px;
+    background: linear-gradient(135deg, var(--sunset), var(--gold));
+    font-size:1.5rem;
+  }
+  .demand-card:hover .card-title{ color: var(--violet); }
+  .card-title{ transition: color .25s ease; }
+
+  .stat-badge{ transition: transform .2s ease, box-shadow .2s ease; }
+  .demand-card:hover .stat-badge{ transform: scale(1.07); box-shadow: 0 6px 16px rgba(0,0,0,.15); }
+
+  .shimmer{ position:relative; overflow:hidden; }
+  .shimmer::after{
+    content:"";
+    position:absolute; top:0; left:-150%;
+    width:60%; height:100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,.7), transparent);
+    transform: skewX(-20deg);
+    transition: left .7s ease;
+  }
+  .demand-card:hover .shimmer::after{ left:150%; }
+
+  @keyframes float-in{ from{ opacity:0; transform: translateY(20px);} to{ opacity:1; transform: translateY(0);} }
+  .float-in{ animation: float-in .55s ease both; }
+</style>
+</head>
+<body class="text-[var(--night)]">
+
+<nav class="fixed top-0 inset-x-0 z-50 bg-[var(--night)]/70 backdrop-blur-md text-[var(--sand)] border-b border-white/10">
+  <div class="max-w-5xl mx-auto flex items-center justify-between px-5 py-3">
+    <a href="/" class="font-display text-xl md:text-2xl tracking-wide flex items-center gap-2">
+      <span class="text-2xl">🌺</span> <span class="text-gradient">Vaiana des Tâches</span>
+    </a>
+    <div class="flex gap-1 md:gap-2 text-sm md:text-base font-display">
+      <a href="/" class="px-3 py-2 rounded-full hover:bg-white/10 transition">Accueil</a>
+      <a href="{% url 'formulaire' %}" class="px-3 py-2 rounded-full hover:bg-white/10 transition">Nouvelle demande</a>
+      <a href="{% url 'confirmation' %}" class="px-3 py-2 rounded-full bg-white/20">Mes demandes</a>
+    </div>
+  </div>
+</nav>
+
+<div class="relative min-h-screen pt-28 pb-16 px-5 overflow-hidden bg-sunset-ocean">
+
+  <div class="absolute top-24 left-[5%] text-4xl float-y opacity-70">🌸</div>
+  <div class="absolute top-40 right-[6%] text-4xl float-y opacity-70" style="animation-delay:1s">🐚</div>
+  <div class="absolute top-16 left-[45%] text-[var(--gold)] twinkle text-xl">✦</div>
+
+  <div class="relative z-10 max-w-4xl mx-auto">
+
+    <div class="text-center mb-10">
+      <div class="text-6xl mb-2 bob">🏝️</div>
+      <h1 class="font-display text-3xl md:text-4xl text-gradient">La carte de tes demandes</h1>
+      <p class="text-sm text-[var(--sand)]/85 mt-1">Chaque demande est une demande que je prend en compte.Je ferai mon mieux.</p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {% for formulaire in demande %}
+      <div class="demand-card shimmer float-in gradient-card p-6" style="animation-delay: {% widthratio forloop.counter0 1 100 %}ms">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <div class="flex items-center gap-3">
+            <div class="card-icon">🐚</div>
+            <div>
+              <p class="text-xs uppercase tracking-wide opacity-50 font-display">Demandeur</p>
+              <h2 class="card-title font-display text-xl leading-tight">{{ formulaire.demandeur }}</h2>
+            </div>
+          </div>
+
+          {% if formulaire.statut == "validé" or formulaire.statut == "valide" or formulaire.statut == "acceptée" %}
+            <span class="stat-badge shrink-0 text-xs px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 font-display">✅ {{ formulaire.statut }}</span>
+          {% elif formulaire.statut == "refusé" or formulaire.statut == "refuse" or formulaire.statut == "rejetée" %}
+            <span class="stat-badge shrink-0 text-xs px-3 py-1 rounded-full bg-red-100 text-red-700 font-display">🌪️ {{ formulaire.statut }}</span>
+          {% elif formulaire.statut == "en cours" or formulaire.statut == "en_cours" %}
+            <span class="stat-badge shrink-0 text-xs px-3 py-1 rounded-full" style="background: linear-gradient(135deg, var(--gold), var(--flame)); color:white;">🌤️ {{ formulaire.statut }}</span>
+          {% else %}
+            <span class="stat-badge shrink-0 text-xs px-3 py-1 rounded-full" style="background: linear-gradient(135deg, var(--violet), var(--sunset)); color:white;">🌊 {{ formulaire.statut }}</span>
+          {% endif %}
+        </div>
+
+        <div class="stitch my-3 opacity-25"></div>
+
+        <p class="text-sm font-medium">
+          <span class="opacity-50 font-display text-xs uppercase tracking-wide block mb-0.5">Demande</span>
+          {{ formulaire.demande }}
+        </p>
+
+        <p class="text-sm mt-3 opacity-80">
+          <span class="opacity-50 font-display text-xs uppercase tracking-wide block mb-0.5">Détails</span>
+          {{ formulaire.details }}
+        </p>
+
+        <div class="mt-4 pt-3 border-t border-[var(--violet)]/10 flex items-center justify-between text-xs opacity-60">
+          <span>📅 {{ formulaire.date_created|date:"d M Y à H:i" }}</span>
+          <span class="font-display text-[var(--sunset)]">✦ Île n°{{ forloop.counter }}</span>
+        </div>
+      </div>
+      {% empty %}
+      <div class="md:col-span-2 text-center py-20">
+        <div class="text-6xl mb-4 bob">🌊</div>
+        <p class="font-display text-xl text-[var(--sand)]">Aucune demande sur la carte pour l'instant</p>
+        <a href="{% url 'formulaire'%}" class="btn-glow mt-5 inline-flex items-center gap-2 text-white font-display px-6 py-3 rounded-full">
+          🐚 Lancer ma première demande
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
